@@ -4708,6 +4708,7 @@ func TestJWTHeader(t *testing.T) {
 func TestJWTAccountImportsWithWildcardSupport(t *testing.T) {
 	test := func(aExpPub, aExpJwt, aExpCreds, aImpPub, aImpJwt, aImpCreds, exSubExpect, exPub, imReq, imSubExpect string) {
 		cf := createConfFile(t, []byte(fmt.Sprintf(`
+		jetstream: true
 		port: -1
 		operator = %s
 		resolver = MEMORY
