@@ -149,6 +149,11 @@ type RemoteLeafOpts struct {
 	DenyExports  []string    `json:"-"`
 }
 
+type MergedClaimAndJWT struct {
+	jwt.OperatorClaims
+	theJWT string
+}
+
 // Options block for nats-server.
 // NOTE: This structure is no longer used for monitoring endpoints
 // and json tags are deprecated and may be removed in the future.
@@ -225,10 +230,10 @@ type Options struct {
 	MaxTracedMsgLen int `json:"-"`
 
 	// Operating a trusted NATS server
-	TrustedKeys              []string              `json:"-"`
-	TrustedOperators         []*jwt.OperatorClaims `json:"-"`
-	AccountResolver          AccountResolver       `json:"-"`
-	AccountResolverTLSConfig *tls.Config           `json:"-"`
+	TrustedKeys              []string             `json:"-"`
+	TrustedOperators         []*MergedClaimAndJWT `json:"-"`
+	AccountResolver          AccountResolver      `json:"-"`
+	AccountResolverTLSConfig *tls.Config          `json:"-"`
 	resolverPreloads         map[string]string
 
 	CustomClientAuthentication Authentication `json:"-"`
@@ -851,7 +856,7 @@ func (o *Options) processConfigFileLine(k string, v interface{}, errors *[]error
 			*errors = append(*errors, err)
 		}
 		// Assume for now these are file names, but they can also be the JWT itself inline.
-		o.TrustedOperators = make([]*jwt.OperatorClaims, 0, len(opFiles))
+		o.TrustedOperators = make([]*MergedClaimAndJWT, 0, len(opFiles))
 		for _, fname := range opFiles {
 			opc, err := ReadOperatorJWT(fname)
 			if err != nil {

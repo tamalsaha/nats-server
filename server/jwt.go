@@ -31,7 +31,7 @@ var nscDecoratedRe = regexp.MustCompile(`\s*(?:(?:[-]{3,}[^\n]*[-]{3,}\n)(.+)(?:
 const jwtPrefix = "eyJ"
 
 // ReadOperatorJWT will read a jwt file for an operator claim. This can be a decorated file.
-func ReadOperatorJWT(jwtfile string) (*jwt.OperatorClaims, error) {
+func ReadOperatorJWT(jwtfile string) (*MergedClaimAndJWT, error) {
 	contents, err := ioutil.ReadFile(jwtfile)
 	if err != nil {
 		// Check to see if the JWT has been inlined.
@@ -59,7 +59,7 @@ func ReadOperatorJWT(jwtfile string) (*jwt.OperatorClaims, error) {
 	if err != nil {
 		return nil, err
 	}
-	return opc, nil
+	return &MergedClaimAndJWT{*opc, claim}, nil
 }
 
 // Just wipe slice with 'x', for clearing contents of nkey seed file.

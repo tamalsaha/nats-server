@@ -129,7 +129,7 @@ func TestOperatorConfig(t *testing.T) {
 	}
 	// We should have filled in the public TrustedKeys here.
 	// Our master public key (issuer) plus the signing keys (3).
-	checkKeys(t, opts, opts.TrustedOperators[0], 4)
+	checkKeys(t, opts, &opts.TrustedOperators[0].OperatorClaims, 4)
 }
 
 func TestOperatorConfigInline(t *testing.T) {
@@ -148,7 +148,7 @@ func TestOperatorConfigInline(t *testing.T) {
 	}
 	// We should have filled in the public TrustedKeys here.
 	// Our master public key (issuer) plus the signing keys (3).
-	checkKeys(t, opts, opts.TrustedOperators[0], 4)
+	checkKeys(t, opts, &opts.TrustedOperators[0].OperatorClaims, 4)
 }
 
 func runOperatorServer(t *testing.T) (*server.Server, *server.Options) {

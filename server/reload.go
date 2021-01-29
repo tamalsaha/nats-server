@@ -778,7 +778,7 @@ func imposeOrder(value interface{}) error {
 		})
 	case []string:
 		sort.Strings(value)
-	case []*jwt.OperatorClaims:
+	case []*MergedClaimAndJWT:
 		sort.Slice(value, func(i, j int) bool {
 			return value[i].Issuer < value[j].Issuer
 		})

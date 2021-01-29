@@ -1045,6 +1045,7 @@ type Varz struct {
 	HTTPReqStats      map[string]uint64 `json:"http_req_stats"`
 	ConfigLoadTime    time.Time         `json:"config_load_time"`
 	Tags              jwt.TagList       `json:"tags,omitempty"`
+	OperatorJwt       []string          `json:"operator_jwt,omitempty"`
 }
 
 // JetStreamVarz contains basic runtime information about jetstream
@@ -1280,6 +1281,13 @@ func (s *Server) createVarz(pcpu float64, rss int64) *Varz {
 			}
 		}
 		varz.LeafNode.Remotes = rlna
+	}
+	if l := len(opts.TrustedOperators); l > 0 {
+		jwts := make([]string, l)
+		for i, op := range opts.TrustedOperators {
+			jwts[i] = op.theJWT
+		}
+		varz.OperatorJwt = jwts
 	}
 
 	if s.js != nil {
